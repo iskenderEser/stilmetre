@@ -4,107 +4,258 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sosyal Stil Belirleme Gözlem Formu</title>
+  <meta name="description" content="Gözleme dayalı sosyal stil belirleme formu." />
 
   <style>
     :root{
-      --bg:#ffffff; --text:#121212; --muted:#5f6368;
-      --border:#e6e6e6; --soft:#f7f7f8;
+      --bg:#ffffff;
+      --text:#121212;
+      --muted:#5f6368;
+      --border:#e6e6e6;
+      --soft:#f7f7f8;
       --shadow: 0 8px 24px rgba(0,0,0,.08);
-      --radius: 16px; --gap: 14px;
+      --radius: 16px;
+      --gap: 14px;
 
-      --red:#d32f2f; --blue:#1565c0; --green:#2e7d32; --yellow:#f9a825;
+      --red:#d32f2f;
+      --blue:#1565c0;
+      --green:#2e7d32;
+      --yellow:#f9a825;
     }
+
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       color:var(--text);
-      background:linear-gradient(180deg,#fff 0%,#fafafa 100%);
-      padding:20px 14px 60px;
+      background:linear-gradient(180deg, #fff 0%, #fafafa 100%);
+      padding: 20px 14px 60px;
     }
-    .wrap{ max-width:1100px; margin:0 auto; }
-    header{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
-    h1{ margin:0; font-size:clamp(20px,2.4vw,28px); letter-spacing:-.2px; }
-    .sub{ margin:6px 0 0; color:var(--muted); font-size:14px; line-height:1.4; max-width:72ch; }
-    .topActions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    .wrap{ max-width: 1100px; margin:0 auto; }
+
+    header{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom: 16px;
+    }
+
+    h1{
+      font-size: clamp(20px, 2.4vw, 28px);
+      margin:0;
+      letter-spacing:-.2px;
+    }
+    .sub{
+      margin:6px 0 0;
+      color:var(--muted);
+      line-height:1.4;
+      max-width: 72ch;
+      font-size: 14px;
+    }
+
+    .topActions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
     button{
-      border:1px solid var(--border); background:#fff; padding:10px 12px;
-      border-radius:12px; cursor:pointer; font-weight:700; font-size:13px;
-      box-shadow:0 1px 0 rgba(0,0,0,.02);
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      box-shadow: 0 1px 0 rgba(0,0,0,.02);
+      font-weight: 600;
+      font-size: 13px;
     }
     button:hover{ background:var(--soft); }
+    button:active{ transform: translateY(1px); }
 
-    .grid{ display:grid; grid-template-columns:1fr; gap:var(--gap); margin-top:14px; }
-    @media(min-width:960px){ .grid{ grid-template-columns:1.1fr .9fr; } }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: var(--gap);
+      margin-top: 14px;
+    }
+    @media(min-width: 960px){
+      .grid{ grid-template-columns: 1.1fr .9fr; }
+    }
 
     .card{
-      background:var(--bg); border:1px solid var(--border);
-      border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+      background: var(--bg);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
     .cardHead{
-      padding:14px 16px; border-bottom:1px solid var(--border);
-      display:flex; justify-content:space-between; gap:10px; background:#fff;
+      padding: 14px 16px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      background: #fff;
     }
-    .cardTitle{ margin:0; font-size:15px; letter-spacing:-.1px; }
+    .cardTitle{
+      margin:0;
+      font-size: 15px;
+      letter-spacing:-.1px;
+    }
     .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      font-size:12px; color:var(--muted);
-      padding:6px 10px; border:1px solid var(--border);
-      border-radius:999px; background:#fff; white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      white-space: nowrap;
     }
-    .cardBody{ padding:12px 12px 14px; }
+    .cardBody{ padding: 12px 12px 14px; }
 
-    /* Accordion groups */
-    .accordion{ display:flex; flex-direction:column; gap:12px; }
+    /* Accordion */
+    .accordion{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
     details.group{
       border:1px solid var(--border);
-      border-radius:14px;
+      border-radius: 14px;
       background:#fff;
       overflow:hidden;
     }
     summary.groupHead{
       list-style:none;
       cursor:pointer;
-      padding:12px 12px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px solid var(--border);
+      padding: 12px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
       user-select:none;
     }
     summary.groupHead::-webkit-details-marker{ display:none; }
-    .groupName{ margin:0; font-weight:900; font-size:13px; }
-    .count{
-      font-weight:900; font-size:12px;
-      padding:6px 10px; border-radius:999px;
-      background:var(--soft); border:1px solid var(--border);
-      min-width:54px; text-align:center;
-    }
-    .items{ padding:10px 10px 12px; display:flex; flex-direction:column; gap:8px; }
-    label.item{
-      display:flex; gap:10px; align-items:flex-start;
-      padding:10px 10px; border-radius:12px;
-      border:1px solid var(--border); background:#fff; cursor:pointer;
-    }
-    label.item:hover{ background:var(--soft); }
-    input[type="checkbox"]{ margin-top:2px; transform:scale(1.1); accent-color:#111; }
-    .txt{ font-size:13px; line-height:1.35; }
 
-    .resultBox{ display:flex; flex-direction:column; gap:12px; }
-    .resultBig{ padding:14px 16px; border-radius:16px; border:1px solid var(--border); background:#fff; }
-    .resultTitle{ margin:0; font-size:12px; color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.2px; }
-    .resultMeta{ margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.4; }
+    .groupName{
+      font-weight:900;
+      font-size: 13px;
+      margin:0;
+    }
+    .count{
+      font-weight:900;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      min-width: 54px;
+      text-align:center;
+    }
+
+    .items{
+      padding: 10px 10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      border-top:1px solid var(--border);
+    }
+    label.item{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+    }
+    label.item:hover{ background: var(--soft); }
+    input[type="checkbox"]{
+      margin-top: 2px;
+      transform: scale(1.1);
+      accent-color: #111;
+    }
+    .txt{
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .resultBox{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .resultBig{
+      padding: 14px 16px;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+    .resultTitle{
+      margin:0;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: .2px;
+      text-transform: uppercase;
+    }
+    .resultMeta{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.4;
+    }
+
     .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      border-radius:999px; padding:8px 12px;
-      border:1px solid var(--border); background:#fff;
-      font-weight:900; font-size:13px; width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      border:1px solid var(--border);
+      background:#fff;
+      font-weight: 900;
+      font-size: 13px;
+      width: fit-content;
     }
-    .dot{ width:10px; height:10px; border-radius:50%; background:#999; }
-    .miniRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+    .dot{
+      width:10px; height:10px;
+      border-radius: 50%;
+      background:#999;
+      flex: 0 0 auto;
+    }
+
+    .miniRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 10px;
+    }
+
     .warn{
-      border-left:4px solid #999; padding:10px 12px;
-      background:#fff; border:1px solid var(--border); border-radius:12px;
+      border-left: 4px solid #999;
+      padding: 10px 12px;
+      background: #fff;
+      border:1px solid var(--border);
+      border-radius: 12px;
     }
-    .note{ color:var(--muted); font-size:12px; line-height:1.45; padding:0 2px; }
+    .note{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      padding: 0 2px;
+    }
   </style>
 </head>
 
@@ -127,11 +278,13 @@
     </header>
 
     <div class="grid">
+
       <section class="card">
         <div class="cardHead">
           <h2 class="cardTitle">Gözlem İfadeleri</h2>
           <div class="pill" id="totalChecked">İşaretli: 0</div>
         </div>
+
         <div class="cardBody">
           <div class="accordion" id="groupsRoot"></div>
         </div>
@@ -170,91 +323,109 @@
           </div>
         </div>
       </aside>
+
     </div>
   </div>
 
   <script>
+    // --- Data (s4 Gruplandırılmış_3rd) ---
     const DATA = [
-      { key:"T", title:"Söyleyen İddiacı (T)", items:[
-        "Olaylar karşısında düşüncelerini hemen ifade etmek ister.",
-        "Kendisine verilen bir görevi bir an önce yapmak ister.",
-        "Hayatta risk almak gerektiğini düşünür.",
-        "Önce kendisi el uzatır.",
-        "Bir karmaşa olduğunda kontrolü ele almak ister.",
-        "İletişimlerde dışa dönük ve açık sözlüdür.",
-        "Sonuçların kendisi için önemli olduğunu düşünür.",
-        "Fikirlerini tartışarak ikna etmeyi tercih eder.",
-        "Çok sabırlı olmadığı söylenir.",
-        "Rekabeti sever.",
-        "Grup içinde ön planda olmak ister.",
-        "Çabuk karar verir.",
-        "Grubun kendisini takip etmesini ister.",
-        "Görüşlerini ve düşüncelerini hemen paylaşır.",
-        "İşleri kendi yöntemleriyle yapmayı tercih eder."
-      ]},
-      { key:"A", title:"Soran İddiacı (A)", items:[
-        "Her akla geleni söylemez.",
-        "Kendisine verilen bir görevi yerine getirirken acele etmemek gerektiğini düşünür.",
-        "Hayatta riskleri öngörmenin önemli olduğunu düşünür.",
-        "Önce karşısındakinin elini uzatmasını bekler.",
-        "Bir karmaşa olduğunda önce izlemeyi tercih eder.",
-        "İletişimlerde dinlemeyi ve izlemeyi tercih eder.",
-        "Süreçleri ve yöntemleri bilmek ister.",
-        "Fikirlerini bir kere söyler ve dinler.",
-        "Oldukça sabırlıdır.",
-        "İş birliği yapmayı tercih eder.",
-        "Grup içinde ön planda olmayı tercih etmez.",
-        "Karar vermek için zamana ihtiyaç duyar.",
-        "Gruba göre hareket etmeyi tercih eder.",
-        "Görüşlerini ve düşüncelerini hemen ifade etmeyi tercih etmez.",
-        "Yapılanları onaylamayı tercih eder."
-      ]},
-      { key:"C", title:"Düşük Tepkisel (C)", items:[
-        "İlişkilerde mesafelidir.",
-        "Duygularını ifade etmeyi pek tercih etmez.",
-        "Olur olmadık yerde şaka yapılmasından hoşlanmaz.",
-        "Gerçeklere dayanarak konuşur.",
-        "Bir görev verildiğinde yalnız çalışmayı tercih eder.",
-        "Kişilerin olaylar karşısında düşündüklerini anlamaya çalışır.",
-        "İlişkilerinde resmiyeti tercih eder.",
-        "İşlerin yürümesi için herkesin işini yapması gerektiğini düşünür.",
-        "Çoğu zaman çevresinde olup bitenlerden en son haberdar olur.",
-        "Daha çok görev odaklı biri olduğunu düşünür.",
-        "Çevresinin kendisini sokulgan olarak tanımlamasından hoşlanmaz.",
-        "İlişkilerinde duyguların ikinci planda olduğunu düşünür.",
-        "Kişilere karşı isteklerini söylemekten çekinmez.",
-        "İletişimlerinde temkinli ve ölçülüdür.",
-        "Duyguların anlaşılması gerektiğini düşünür."
-      ]},
-      { key:"E", title:"Yüksek Tepkisel (E)", items:[
-        "İlişkilerde sıcak ve arkadaşça yaklaştığını düşünür.",
-        "Duyguları ifade etmenin iletişim için önemli olduğuna inanır.",
-        "Arkadaşlarıyla şakalaşmayı sever.",
-        "Görüşlerini öne sürerek konuşur.",
-        "Bir görev verildiğinde ortak çalışmayı tercih eder.",
-        "Kişilerin olaylar karşısında hissettiklerini anlamaya çalışır.",
-        "Çevresindeki birçok kişiyle samimi olduğunu düşünür.",
-        "İşlerini kişisel ilişkilerle halletmeyi tercih eder.",
-        "Çevresinde olup bitenlerle ilgili çoğu kişiden önce haberdar olur.",
-        "Daha çok ilişki odaklı biri olduğunu düşünür.",
-        "Çevresindeki kişilere karşı yakın ve açıktır.",
-        "İlişkilerinde önce duyguları anlamak ister.",
-        "Kişilere karşı anlayışlıdır.",
-        "İletişimlerinde zorlayıcıdır.",
-        "Duyguların paylaşılması gerektiğine inanır."
-      ]}
+      {
+        key: "T",
+        title: "Söyleyen İddiacı (T)",
+        items: [
+          "Olaylar karşısında düşüncelerini hemen ifade etmek ister.",
+          "Kendisine verilen bir görevi bir an önce yapmak ister.",
+          "Hayatta risk almak gerektiğini düşünür.",
+          "Önce kendisi el uzatır.",
+          "Bir karmaşa olduğunda kontrolü ele almak ister.",
+          "İletişimlerde dışa dönük ve açık sözlüdür.",
+          "Sonuçların kendisi için önemli olduğunu düşünür.",
+          "Fikirlerini tartışarak ikna etmeyi tercih eder.",
+          "Çok sabırlı olmadığı söylenir.",
+          "Rekabeti sever.",
+          "Grup içinde ön planda olmak ister.",
+          "Çabuk karar verir.",
+          "Grubun kendisini takip etmesini ister.",
+          "Görüşlerini ve düşüncelerini hemen paylaşır.",
+          "İşleri kendi yöntemleriyle yapmayı tercih eder."
+        ]
+      },
+      {
+        key: "A",
+        title: "Soran İddiacı (A)",
+        items: [
+          "Her akla geleni söylemez.",
+          "Kendisine verilen bir görevi yerine getirirken acele etmemek gerektiğini düşünür.",
+          "Hayatta riskleri öngörmenin önemli olduğunu düşünür.",
+          "Önce karşısındakinin elini uzatmasını bekler.",
+          "Bir karmaşa olduğunda önce izlemeyi tercih eder.",
+          "İletişimlerde dinlemeyi ve izlemeyi tercih eder.",
+          "Süreçleri ve yöntemleri bilmek ister.",
+          "Fikirlerini bir kere söyler ve dinler.",
+          "Oldukça sabırlıdır.",
+          "İş birliği yapmayı tercih eder.",
+          "Grup içinde ön planda olmayı tercih etmez.",
+          "Karar vermek için zamana ihtiyaç duyar.",
+          "Gruba göre hareket etmeyi tercih eder.",
+          "Görüşlerini ve düşüncelerini hemen ifade etmeyi tercih etmez.",
+          "Yapılanları onaylamayı tercih eder."
+        ]
+      },
+      {
+        key: "C",
+        title: "Düşük Tepkisel (C)",
+        items: [
+          "İlişkilerde mesafelidir.",
+          "Duygularını ifade etmeyi pek tercih etmez.",
+          "Olur olmadık yerde şaka yapılmasından hoşlanmaz.",
+          "Gerçeklere dayanarak konuşur.",
+          "Bir görev verildiğinde yalnız çalışmayı tercih eder.",
+          "Kişilerin olaylar karşısında düşündüklerini anlamaya çalışır.",
+          "İlişkilerinde resmiyeti tercih eder.",
+          "İşlerin yürümesi için herkesin işini yapması gerektiğini düşünür.",
+          "Çoğu zaman çevresinde olup bitenlerden en son haberdar olur.",
+          "Daha çok görev odaklı biri olduğunu düşünür.",
+          "Çevresinin kendisini sokulgan olarak tanımlamasından hoşlanmaz.",
+          "İlişkilerinde duyguların ikinci planda olduğunu düşünür.",
+          "Kişilere karşı isteklerini söylemekten çekinmez.",
+          "İletişimlerinde temkinli ve ölçülüdür.",
+          "Duyguların anlaşılması gerektiğini düşünür."
+        ]
+      },
+      {
+        key: "E",
+        title: "Yüksek Tepkisel (E)",
+        items: [
+          "İlişkilerde sıcak ve arkadaşça yaklaştığını düşünür.",
+          "Duyguları ifade etmenin iletişim için önemli olduğuna inanır.",
+          "Arkadaşlarıyla şakalaşmayı sever.",
+          "Görüşlerini öne sürerek konuşur.",
+          "Bir görev verildiğinde ortak çalışmayı tercih eder.",
+          "Kişilerin olaylar karşısında hissettiklerini anlamaya çalışır.",
+          "Çevresindeki birçok kişiyle samimi olduğunu düşünür.",
+          "İşlerini kişisel ilişkilerle halletmeyi tercih eder.",
+          "Çevresinde olup bitenlerle ilgili çoğu kişiden önce haberdar olur.",
+          "Daha çok ilişki odaklı biri olduğunu düşünür.",
+          "Çevresindeki kişilere karşı yakın ve açıktır.",
+          "İlişkilerinde önce duyguları anlamak ister.",
+          "Kişilere karşı anlayışlıdır.",
+          "İletişimlerinde zorlayıcıdır.",
+          "Duyguların paylaşılması gerektiğine inanır."
+        ]
+      }
     ];
 
+    // Quadrant mapping
     const STYLE_MAP = {
-      "T+C": { name:"Yönlendirici", color:"var(--red)" },
-      "A+C": { name:"Analitik",     color:"var(--blue)" },
-      "A+E": { name:"Canayakın",    color:"var(--green)" },
-      "T+E": { name:"İfadeci",      color:"var(--yellow)" }
+      "T+C": { name: "Yönlendirici", color: "var(--red)" },
+      "A+C": { name: "Analitik",     color: "var(--blue)" },
+      "A+E": { name: "Canayakın",    color: "var(--green)" },
+      "T+E": { name: "İfadeci",      color: "var(--yellow)" }
     };
 
-    const AXIS_CAP = 15;
-
-    const qs  = (s, el=document) => el.querySelector(s);
+    // --- Helpers ---
+    const qs = (s, el=document) => el.querySelector(s);
     const qsa = (s, el=document) => Array.from(el.querySelectorAll(s));
 
     const groupsRoot = qs("#groupsRoot");
@@ -266,6 +437,9 @@
     const styleMetaEl = qs("#styleMeta");
     const edgeNoteEl = qs("#edgeNote");
     const limitNoteEl = qs("#limitNote");
+
+    // --- LIMIT RULES ---
+    const AXIS_CAP = 15; // T+A max 15, C+E max 15
 
     function showLimit(msg){
       limitNoteEl.style.display = "block";
@@ -300,12 +474,19 @@
           <div class="items" id="items-${g.key}"></div>
         `;
 
-        // ✅ Tek açık akordiyon (diğerleri kapanır, işaretler kalır)
-        details.addEventListener("toggle", () => {
-          if (!details.open) return;
+        // ✅ TEK-AÇIK ACCORDION: summary click'i biz yönetiyoruz
+        const summary = details.querySelector("summary");
+        summary.addEventListener("click", (ev) => {
+          ev.preventDefault(); // native toggle'ı iptal
+          const willOpen = !details.open;
+
+          // diğer açık olanları kapat (işaretler kalır)
           qsa("details.group", groupsRoot).forEach(d => {
             if (d !== details) d.open = false;
           });
+
+          // bunu aç/kapat
+          details.open = willOpen;
         });
 
         const itemsEl = details.querySelector(`#items-${g.key}`);
@@ -323,18 +504,18 @@
         groupsRoot.appendChild(details);
       });
 
-      // Limit + sayım
+      // Limit + sayım (event delegation)
       groupsRoot.addEventListener("change", (e) => {
         const target = e.target;
         if (!(target instanceof HTMLInputElement) || target.type !== "checkbox") return;
 
         if (target.checked) {
-          const g = target.dataset.group;
+          const g = target.dataset.group; // T/A/C/E
           const axis = (g === "T" || g === "A") ? "TA" : "CE";
           const total = axisTotal(axis);
 
           if (total > AXIS_CAP) {
-            target.checked = false;
+            target.checked = false; // geri al
             showLimit(axis === "TA"
               ? "Limit: Söyleyen İddiacı (T) + Soran İddiacı (A) toplamı en fazla 15 olabilir."
               : "Limit: Düşük Tepkisel (C) + Yüksek Tepkisel (E) toplamı en fazla 15 olabilir."
@@ -342,7 +523,7 @@
           }
         }
         recalc();
-      });
+      }, { passive: true });
 
       recalc();
     }
@@ -350,15 +531,22 @@
     function getCounts(){
       const counts = { T:0, A:0, C:0, E:0 };
       const checks = qsa('input[type="checkbox"][data-group]');
-      for (const ch of checks) if (ch.checked) counts[ch.dataset.group]++;
+      for (const ch of checks){
+        if (ch.checked) counts[ch.dataset.group]++;
+      }
       return { counts, total: checks.filter(c => c.checked).length };
     }
 
     function pickTopTwoAcrossAxes(counts){
-      const entries = Object.entries(counts).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+      const entries = Object.entries(counts)
+        .map(([k,v]) => ({k, v}))
+        .sort((a,b) => b.v - a.v);
+
       if (entries[0].v === 0) return { top: [], note: "" };
 
-      const first = entries[0], second = entries[1];
+      const first = entries[0];
+      const second = entries[1];
+
       const assertive = new Set(["T","A"]);
       const reactive  = new Set(["C","E"]);
 
@@ -366,17 +554,25 @@
         (assertive.has(first.k) && assertive.has(second.k)) ||
         (reactive.has(first.k)  && reactive.has(second.k));
 
-      if (!sameAxis) return { top:[first.k, second.k], note:"" };
+      if (!sameAxis){
+        return { top: [first.k, second.k], note: "" };
+      }
 
+      // aynı eksen çıkarsa: en yükseği tut, diğer eksenden en yüksek olan ile tamamla
       const needAxis = assertive.has(first.k) ? reactive : assertive;
       const fallback = entries.find(e => needAxis.has(e.k) && e.v > 0);
 
-      if (fallback) return {
-        top:[first.k, fallback.k],
-        note:`Not: En yüksek iki grup aynı eksenden geldiği için (${first.k} + ${second.k}), diğer eksenden en yüksek olan ile tamamlandı (${fallback.k}).`
-      };
+      if (fallback){
+        return {
+          top: [first.k, fallback.k],
+          note: `Not: En yüksek iki grup aynı eksenden geldiği için (${first.k} + ${second.k}), diğer eksenden en yüksek olan ile tamamlandı (${fallback.k}).`
+        };
+      }
 
-      return { top:[first.k], note:"Not: Stil için iki eksenden de (T/A ve C/E) en az birer ifade işaretlenmelidir." };
+      return {
+        top: [first.k],
+        note: "Not: Stil için iki eksenden de (T/A ve C/E) en az birer ifade işaretlenmelidir."
+      };
     }
 
     function recalc(){
@@ -400,6 +596,7 @@
         const style = STYLE_MAP[pair] || STYLE_MAP[pair2];
 
         topTwoPill.textContent = `Top 2: ${top[0]} + ${top[1]}`;
+
         if (style){
           styleNameEl.textContent = style.name;
           styleDotEl.style.background = style.color;
@@ -422,6 +619,7 @@
       }
     }
 
+    // Actions
     qs("#btnReset").addEventListener("click", () => {
       qsa('input[type="checkbox"][data-group]').forEach(c => c.checked = false);
       recalc();
