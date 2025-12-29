@@ -77,6 +77,169 @@
     button:hover{ background:var(--soft); }
     button:active{ transform: translateY(1px); }
 
+/* Button variants */
+.btnPrimary{
+  background: #111;
+  color:#fff;
+  border-color:#111;
+}
+.btnPrimary:hover{ background:#1f1f1f; }
+.btnSecondary{
+  background:#fff;
+  color:var(--text);
+}
+
+/* Modal */
+.modalOverlay{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding: 18px 14px;
+  z-index: 999;
+}
+.modalOverlay.show{ display:flex; }
+
+.modal{
+  width:min(980px, 100%);
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.25);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  max-height: calc(100vh - 36px);
+}
+.modalHead{
+  padding: 14px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:#fff;
+}
+.modalTitle{
+  margin:0;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing:-.1px;
+}
+.modalBody{
+  padding: 14px 16px 16px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  overflow:auto;
+}
+@media(min-width: 920px){
+  .modalBody{ grid-template-columns: .42fr .58fr; }
+}
+.formBlock{
+  border:1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--soft);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.formRow{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.formRow label{
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.formRow input[type="text"],
+.formRow input[type="date"]{
+  width:100%;
+  padding:10px 10px;
+  border:1px solid var(--border);
+  border-radius: 12px;
+  font-size: 13px;
+  background:#fff;
+}
+.toggleRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 10px;
+  border:1px dashed var(--border);
+  border-radius: 12px;
+  background:#fff;
+}
+.toggleRow input{ transform: scale(1.1); }
+.previewBlock{
+  border:1px solid var(--border);
+  border-radius: 14px;
+  overflow:hidden;
+  background:#fff;
+  min-height: 360px;
+  position:relative;
+}
+.previewFrame{
+  width:100%;
+  height: min(64vh, 640px);
+  border:0;
+  display:block;
+  background:#fff;
+}
+.loading{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:8px;
+  background: rgba(255,255,255,.8);
+  color: var(--muted);
+  font-weight:800;
+  font-size: 13px;
+}
+.loading.show{ display:flex; }
+.spinner{
+  width: 22px; height: 22px;
+  border: 3px solid #ddd;
+  border-top-color: #111;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin{ to { transform: rotate(360deg);} }
+
+.modalFoot{
+  padding: 12px 16px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+  background:#fff;
+}
+
+.toast{
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  background: #111;
+  color:#fff;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.22);
+  display:none;
+  z-index: 1000;
+}
+.toast.show{ display:block; }
+
     .grid{
       display:grid;
       grid-template-columns: 1fr;
@@ -271,11 +434,12 @@
         </p>
       </div>
 
-      <div class="topActions">
-        <button id="btnReset" type="button">Tümünü Temizle</button>
-        <button id="btnCopy" type="button">Sonucu Kopyala</button>
-      </div>
-    </header>
+        <div class="topActions">
+    <button id="btnReset" type="button">Tümünü Temizle</button>
+    <button id="btnCopy" type="button" class="btnSecondary">📋 Kopyala</button>
+    <button id="btnPdf" type="button" class="btnPrimary">📄 PDF Oluştur</button>
+  </div>
+</header>
 
     <div class="grid">
 
@@ -326,6 +490,63 @@
 
     </div>
   </div>
+
+
+<!-- PDF Önizleme Modal -->
+<div class="modalOverlay" id="pdfModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle">
+    <div class="modalHead">
+      <h3 class="modalTitle" id="pdfModalTitle">PDF Önizleme</h3>
+      <button type="button" id="btnCloseModal" class="btnSecondary">Kapat</button>
+    </div>
+
+    <div class="modalBody">
+      <div class="formBlock">
+        <div class="toggleRow">
+          <input type="checkbox" id="metaToggle" />
+          <label for="metaToggle" style="cursor:pointer; margin:0;">
+            Raporunuza <b>isim</b> ve <b>tarih</b> eklemek ister misiniz?
+          </label>
+        </div>
+
+        <div class="formRow">
+          <label for="metaName">İsim (opsiyonel)</label>
+          <input id="metaName" type="text" placeholder="Örn: BM Adı Soyadı / Temsilci Adı Soyadı" disabled />
+        </div>
+
+        <div class="formRow">
+          <label for="metaDate">Tarih</label>
+          <input id="metaDate" type="date" disabled />
+        </div>
+
+        <div class="note">
+          Varsayılan başlık: <b>FAST S4 Gözlem Raporu – (otomatik tarih)</b><br/>
+          İsterseniz bu alanda kişiselleştirebilirsiniz.
+        </div>
+
+        <button type="button" id="btnRebuildPdf" class="btnPrimary">PDF’i Yenile</button>
+      </div>
+
+      <div class="previewBlock">
+        <div class="loading" id="pdfLoading">
+          <div class="spinner"></div>
+          PDF hazırlanıyor…
+        </div>
+        <iframe class="previewFrame" id="pdfFrame" title="PDF Önizleme"></iframe>
+      </div>
+    </div>
+
+    <div class="modalFoot">
+      <button type="button" id="btnDownloadPdf" class="btnPrimary">İndir</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+  <!-- pdfmake CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
   <script>
     // --- Data (s4 Gruplandırılmış_3rd) ---
@@ -625,33 +846,402 @@
       recalc();
     });
 
-    qs("#btnCopy").addEventListener("click", async () => {
-      const { counts } = getCounts();
-      const { top } = pickTopTwoAcrossAxes(counts);
 
-      let styleLine = "Stil: —";
-      if (top.length >= 2){
-        const pair = `${top[0]}+${top[1]}`;
-        const pair2 = `${top[1]}+${top[0]}`;
-        const style = STYLE_MAP[pair] || STYLE_MAP[pair2];
-        if (style) styleLine = `Stil: ${style.name} (${top[0]} + ${top[1]})`;
-      }
 
-      const text =
-`Sosyal Stil Belirleme Gözlem Formu
-Sayım: T=${counts.T}, A=${counts.A}, C=${counts.C}, E=${counts.E}
-${styleLine}`;
+// -----------------------
+// UI Feedback (toast)
+// -----------------------
+const toastEl = qs("#toast");
+function toast(msg, ms=1200){
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toastEl.classList.remove("show"), ms);
+}
 
-      try{
-        await navigator.clipboard.writeText(text);
-        const btn = qs("#btnCopy");
-        const old = btn.textContent;
-        btn.textContent = "Kopyalandı ✓";
-        setTimeout(()=> btn.textContent = old, 900);
-      }catch(e){
-        alert("Kopyalama başarısız. Tarayıcı izinlerini kontrol edin.");
-      }
+// -----------------------
+// Selected items collector
+// -----------------------
+function getSelectedGrouped(){
+  const result = [];
+  for (const g of DATA){
+    const checked = qsa(`input[type="checkbox"][data-group="${g.key}"]`)
+      .map((ch, idx) => ({ ch, idx }))
+      .filter(x => x.ch.checked)
+      .map(x => {
+        // label structure: input + span.txt
+        const label = x.ch.closest("label.item");
+        const txt = label ? label.querySelector(".txt")?.textContent?.trim() : "";
+        return txt || "";
+      })
+      .filter(Boolean);
+
+    result.push({ key: g.key, title: g.title, items: checked });
+  }
+  return result;
+}
+
+function getStyleResult(){
+  const { counts } = getCounts();
+  const { top, note } = pickTopTwoAcrossAxes(counts);
+
+  let styleName = "—";
+  let styleColor = "#999";
+  let combo = "—";
+
+  if (top.length >= 2){
+    const pair = `${top[0]}+${top[1]}`;
+    const pair2 = `${top[1]}+${top[0]}`;
+    const style = STYLE_MAP[pair] || STYLE_MAP[pair2];
+    combo = `${top[0]} + ${top[1]}`;
+    if (style){
+      styleName = style.name;
+      // style.color is a CSS var; resolve to hex-ish via computed style fallback
+      styleColor = getComputedStyle(document.documentElement).getPropertyValue(
+        style.name === "Yönlendirici" ? "--red" :
+        style.name === "Analitik" ? "--blue" :
+        style.name === "Canayakın" ? "--green" : "--yellow"
+      ).trim() || "#111";
+    }
+  }
+
+  return { counts, top, note, styleName, styleColor, combo };
+}
+
+function formatDateTR(d){
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}`;
+}
+
+// -----------------------
+// PDFMake setup + build
+// -----------------------
+// pdfmake vfs_fonts includes Roboto; Roboto has Turkish glyph coverage.
+// Still, we explicitly set the default font for consistency.
+if (window.pdfMake && pdfMake.vfs){
+  pdfMake.fonts = {
+    Roboto: {
+      normal: "Roboto-Regular.ttf",
+      bold: "Roboto-Medium.ttf",
+      italics: "Roboto-Italic.ttf",
+      bolditalics: "Roboto-MediumItalic.ttf"
+    }
+  };
+}
+
+function buildDocDefinition(meta){
+  const sel = getSelectedGrouped();
+  const r = getStyleResult();
+  const now = new Date();
+
+  const titleDate = meta?.dateStr || formatDateTR(now);
+  const baseTitle = meta?.title?.trim()
+    ? meta.title.trim()
+    : `FAST S4 Gözlem Raporu – ${titleDate}`;
+
+  const whoLine = meta?.name?.trim() ? `Hazırlayan: ${meta.name.trim()}` : "";
+
+  // Page 1: summary
+  const page1 = [
+    { text: baseTitle, style: "h1" },
+    ...(whoLine ? [{ text: whoLine, style: "sub" }] : []),
+    { text: "", margin: [0,6,0,0] },
+
+    {
+      columns: [
+        {
+          width: "*",
+          stack: [
+            { text: "Sosyal Stil Sonucu", style: "h2" },
+            {
+              table: {
+                widths: ["*"],
+                body: [[
+                  { text: r.styleName, color: r.styleColor, style: "styleBig" }
+                ]]
+              },
+              layout: "noBorders",
+              margin: [0,2,0,6]
+            },
+            { text: `Kombinasyon: ${r.combo}`, style: "sub" },
+            ...(r.note ? [{ text: r.note, style: "noteBox" }] : [])
+          ]
+        },
+        {
+          width: 210,
+          stack: [
+            { text: "Sayımlar", style: "h2" },
+            {
+              table: {
+                widths: [32, "*"],
+                body: [
+                  [{ text: "T", style: "k" }, { text: String(r.counts.T), style: "v" }],
+                  [{ text: "A", style: "k" }, { text: String(r.counts.A), style: "v" }],
+                  [{ text: "C", style: "k" }, { text: String(r.counts.C), style: "v" }],
+                  [{ text: "E", style: "k" }, { text: String(r.counts.E), style: "v" }],
+                ]
+              },
+              layout: {
+                hLineWidth: () => 0.6,
+                vLineWidth: () => 0.6,
+                hLineColor: () => "#e6e6e6",
+                vLineColor: () => "#e6e6e6",
+                paddingLeft: () => 8,
+                paddingRight: () => 8,
+                paddingTop: () => 6,
+                paddingBottom: () => 6,
+              }
+            }
+          ]
+        }
+      ],
+      columnGap: 14
+    },
+
+    { text: "", margin: [0,10,0,0] },
+    { text: "İşaretlenen Davranışlar", style: "h2" },
+  ];
+
+  // Grouped selected items
+  const groupsWithAny = sel.filter(g => g.items.length);
+  if (!groupsWithAny.length){
+    page1.push({ text: "Henüz seçim yapılmadı.", style: "sub" });
+  } else {
+    for (const g of groupsWithAny){
+      page1.push({ text: g.title, style: "h3", margin: [0,8,0,4] });
+      page1.push({
+        ul: g.items,
+        margin: [0,0,0,0],
+        style: "list"
+      });
+    }
+  }
+
+  // Page 2: info (lightweight default content; can be replaced with your own later)
+  const page2 = [
+    { text: "Sosyal Stile Dair Notlar", style: "h1", pageBreak: "before" },
+    { text: "Bu sayfa, rapora ek bilgi alanı olarak tasarlanmıştır. İsterseniz kendi içeriklerinizle genişletebilirsiniz.", style: "sub" },
+
+    { text: "İletişim Beklentileri (Genel)", style: "h2", margin: [0,10,0,4] },
+    { ul: [
+        "Net ve anlaşılır bir iletişim dili kullanın.",
+        "Somut örneklerle gözlemi destekleyin.",
+        "Geri bildirim verirken davranışa odaklanın (kişiye değil)."
+      ],
+      style: "list"
+    },
+
+    { text: "Gelişim Önerileri (Genel)", style: "h2", margin: [0,10,0,4] },
+    { ul: [
+        "Güçlü görünen davranışları koruyun; zayıf kalan eksende küçük hedefler belirleyin.",
+        "Aynı durumlarda farklı yaklaşım denemeleri yapın ve sonucu gözlemleyin.",
+        "BM–Temsilci ikili çalışmalarda örnek cümle/rol-play ile pekiştirin."
+      ],
+      style: "list"
+    },
+
+    { text: "Alt Bilgi", style: "h2", margin: [0,10,0,4] },
+    { text: "Not: Bu araç bir kişilik testi değildir; sahadaki davranış gözlemlerini yapılandırmak için hazırlanmıştır.", style: "sub" }
+  ];
+
+  return {
+    pageSize: "A4",
+    pageMargins: [36, 34, 36, 38],
+    defaultStyle: { font: "Roboto", fontSize: 10, lineHeight: 1.25 },
+    footer: (currentPage, pageCount) => ({
+      columns: [
+        { text: `FAST S4 • ${formatDateTR(now)}`, alignment: "left", margin: [36, 0, 0, 0], color:"#666", fontSize: 9 },
+        { text: `${currentPage}/${pageCount}`, alignment: "right", margin: [0, 0, 36, 0], color:"#666", fontSize: 9 }
+      ]
+    }),
+    content: [...page1, ...page2],
+    styles: {
+      h1: { fontSize: 16, bold: true, margin: [0,0,0,6] },
+      h2: { fontSize: 12, bold: true, margin: [0,6,0,6] },
+      h3: { fontSize: 10.5, bold: true },
+      sub:{ fontSize: 10, color:"#555", margin:[0,0,0,4] },
+      styleBig:{ fontSize: 22, bold: true, alignment:"left" },
+      list:{ fontSize: 10, margin:[0,0,0,0] },
+      noteBox:{
+        text: r.note,
+        margin:[0,8,0,0],
+        color:"#555",
+        fontSize: 9,
+        italics:true
+      },
+      k:{ bold:true, color:"#444" },
+      v:{ bold:true, alignment:"right" }
+    }
+  };
+}
+
+// -----------------------
+// Modal controls + preview
+// -----------------------
+const modalEl = qs("#pdfModal");
+const frameEl = qs("#pdfFrame");
+const loadingEl = qs("#pdfLoading");
+
+const metaToggle = qs("#metaToggle");
+const metaName = qs("#metaName");
+const metaDate = qs("#metaDate");
+
+let lastBlobUrl = null;
+let lastFileName = null;
+
+function openModal(){
+  modalEl.classList.add("show");
+  modalEl.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+function closeModal(){
+  modalEl.classList.remove("show");
+  modalEl.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+function cleanupBlobUrl(){
+  if (lastBlobUrl){
+    URL.revokeObjectURL(lastBlobUrl);
+    lastBlobUrl = null;
+  }
+}
+
+function safeFileName(s){
+  return (s || "FAST_S4_Gozlem_Raporu")
+    .replace(/[\/:*?"<>|]+/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function buildAndPreviewPdf(){
+  if (!window.pdfMake){
+    alert("PDF oluşturma kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol edin.");
+    return;
+  }
+
+  loadingEl.classList.add("show");
+  frameEl.removeAttribute("src");
+
+  const now = new Date();
+  const dateVal = metaDate.value ? new Date(metaDate.value) : now;
+  const dateStr = formatDateTR(dateVal);
+
+  const useMeta = metaToggle.checked;
+  const meta = {
+    name: useMeta ? (metaName.value || "").trim() : "",
+    dateStr: dateStr,
+    title: useMeta
+      ? `FAST S4 Gözlem Raporu – ${dateStr}`
+      : `FAST S4 Gözlem Raporu – ${formatDateTR(now)}`
+  };
+
+  const dd = buildDocDefinition(meta);
+
+  // Build blob
+  cleanupBlobUrl();
+  await new Promise((resolve) => {
+    pdfMake.createPdf(dd).getBlob((blob) => {
+      lastBlobUrl = URL.createObjectURL(blob);
+      frameEl.src = lastBlobUrl;
+
+      lastFileName = safeFileName(meta.title) + ".pdf";
+
+      loadingEl.classList.remove("show");
+      resolve();
     });
+  });
+}
+
+// toggle enable/disable
+metaToggle.addEventListener("change", () => {
+  const on = metaToggle.checked;
+  metaName.disabled = !on;
+  metaDate.disabled = !on;
+  if (on && !metaDate.value){
+    // today
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2,"0");
+    metaDate.value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  }
+});
+
+// close on overlay click
+modalEl.addEventListener("click", (e) => {
+  if (e.target === modalEl) closeModal();
+});
+
+qs("#btnCloseModal").addEventListener("click", closeModal);
+
+// -----------------------
+// Actions: Copy + PDF
+// -----------------------
+qs("#btnCopy").addEventListener("click", async () => {
+  const r = getStyleResult();
+  const sel = getSelectedGrouped();
+
+  let styleLine = "Sosyal Stil: —";
+  if (r.top.length >= 2){
+    styleLine = `Sosyal Stil: ${r.styleName} (${r.combo})`;
+  }
+
+  const lines = [];
+  lines.push("FAST S4 – Sosyal Stil Belirleme Gözlem Formu");
+  lines.push(`Tarih: ${formatDateTR(new Date())}`);
+  lines.push(`Sayım: T=${r.counts.T}, A=${r.counts.A}, C=${r.counts.C}, E=${r.counts.E}`);
+  lines.push(styleLine);
+
+  const picked = sel.filter(g => g.items.length);
+  if (picked.length){
+    lines.push("");
+    lines.push("İşaretlenen Davranışlar:");
+    for (const g of picked){
+      lines.push(`- ${g.title}`);
+      for (const it of g.items){
+        lines.push(`  • ${it}`);
+      }
+    }
+  }
+
+  const text = lines.join("\n");
+
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Kopyalandı ✓");
+  }catch(e){
+    alert("Kopyalama başarısız. Tarayıcı izinlerini kontrol edin.");
+  }
+});
+
+qs("#btnPdf").addEventListener("click", async () => {
+  openModal();
+  // default: meta fields off; date input stays disabled until toggle
+  await buildAndPreviewPdf();
+});
+
+qs("#btnRebuildPdf").addEventListener("click", buildAndPreviewPdf);
+
+qs("#btnDownloadPdf").addEventListener("click", () => {
+  if (!lastBlobUrl){
+    toast("Önce PDF’i oluşturun.");
+    return;
+  }
+  const a = document.createElement("a");
+  a.href = lastBlobUrl;
+  a.download = lastFileName || "FAST_S4_Gozlem_Raporu.pdf";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  toast("İndirme başlatıldı");
+});
+
+// ESC to close
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && modalEl.classList.contains("show")){
+    closeModal();
+  }
+});
+
 
     buildUI();
   </script>
